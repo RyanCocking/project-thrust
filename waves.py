@@ -17,5 +17,5 @@ class Waves:
             # Setup enemy
             random = np.random.rand(2)
             enemy_start_pos = np.array([world.screen_width*random[0],world.screen_height*random[1]])
-            new_enemy=Enemy(enemy_start_pos,screen,pygame)
+            new_enemy=Enemy(enemy_start_pos,screen)
             world.enemies.append(new_enemy)

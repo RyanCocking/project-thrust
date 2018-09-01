@@ -1,10 +1,12 @@
+import pygame
 import numpy as np
+from projectile import Projectile
 
 # Enemy class
 
 class Enemy:
 
-    def __init__(self,position,screen,pygame):
+    def __init__(self,position,screen):
          self.position = position
          self.velocity = np.array([0,0])
          self.speed    = 0.05
@@ -17,7 +19,7 @@ class Enemy:
          self.orient   = "down_"
 
 
-    def update(self,player,pygame,frame_count):
+    def update(self,player,frame_count,world):
 
         # initilisations
         frame_list = np.array((1,2))
@@ -59,18 +61,30 @@ class Enemy:
                 current_frame = frame_list[1]
 
             if self.velocity[1] > 0:
-                self.sprite = pygame.image.load("images/enemy_rest_up_" + str(current_frame) + ".png")
+                self.sprite = pygame.image.load("images/player_rest_up_" + str(current_frame) + ".png")
                 self.orient = "up_"
             elif self.velocity[1] < 0:
-                self.sprite = pygame.image.load("images/enemy_rest_down_" + str(current_frame) + ".png")
+                self.sprite = pygame.image.load("images/player_rest_down_" + str(current_frame) + ".png")
                 self.orient = "down_"
             elif self.velocity[0] > 0:
-                self.sprite = pygame.image.load("images/enemy_rest_right_" + str(current_frame) + ".png")
+                self.sprite = pygame.image.load("images/player_rest_right_" + str(current_frame) + ".png")
                 self.orient = "right_"
             elif self.velocity[0] < 0:
-                self.sprite = pygame.image.load("images/enemy_rest_left_" + str(current_frame) + ".png")
+                self.sprite = pygame.image.load("images/player_rest_left_" + str(current_frame) + ".png")
                 self.orient = "left_"
 
+        x_distance=(player.position[0]-self.position[0])
+        y_distance=(player.position[1]-self.position[1])
+
+        if x_distance>0:
+            self.angle = np.arctan(y_distance/x_distance)
+        else:
+            self.angle = np.pi+np.arctan(y_distance/x_distance)
+
+        # Shooting
+        if frame_count%self.firing_rate==0:
+            new_bullet = Projectile(self.position,self.angle,self.screen,"laser")
+            world.projectiles.append(new_bullet)
 
         # Getting shot
         for projectile in world.projectiles:

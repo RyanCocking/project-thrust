@@ -89,7 +89,7 @@ while not done:
         waves.update(world,screen,pygame)
     else:
         for enemy in world.enemies:
-            enemy.update(player,world,frame_count)
+            enemy.update(player,frame_count,world)
             enemy.draw()
             if enemy.dead:
                 world.enemies.remove(enemy)
