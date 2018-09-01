@@ -22,11 +22,12 @@ class Player:
         self.adjusted_screen_dimensions[1] = self.screen_dimensions[1]-self.rect.height
 
 
-    def update(self,movement_input,pygame,frame_count):
+    def update(self,movement_input,pygame,pressed_up,pressed_down,pressed_left,pressed_right,frame_count):
         #print(frame_count)
 
         # initilisations
         frame_list = np.array((1,2))
+        orient     = "down_"
 
         #Store previous position
         prev_position = self.position
@@ -57,18 +58,27 @@ class Player:
         # Resting animation
         if (np.array_equal(prev_position,next_position) == True and frame_count%101 == 0):
 
-            print("frame:",frame_count)
-            print("index",frame_count%2)
-
             current_frame = frame_list[frame_count%2]
-            print("images/test" + str(current_frame) + ".png")
-            self.sprite = pygame.image.load("images/test" + str(current_frame) + ".png")
+            self.sprite = pygame.image.load("images/player_rest_" + orient + str(current_frame) + ".png")
 
 
         # Walking animation
         else:
+
             current_frame = frame_list[frame_count%2]
-            self.sprite = pygame.image.load("images/test" + str(current_frame) + ".png")
+
+            if pressed_up:
+                self.sprite = pygame.image.load("images/player_rest_up_" + str(current_frame) + ".png")
+                orient = "up_"
+            elif pressed_down:
+                self.sprite = pygame.image.load("images/player_rest_down_" + str(current_frame) + ".png")
+                orient = "down_"
+            elif pressed_right:
+                self.sprite = pygame.image.load("images/player_rest_right_" + str(current_frame) + ".png")
+                orient = "right_"
+            elif pressed_left:
+                self.sprite = pygame.image.load("images/player_rest_left_" + str(current_frame) + ".png")
+                orient = "left_"
 
     def draw(self):
         self.screen.blit(self.sprite, self.rect)

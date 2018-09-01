@@ -77,7 +77,7 @@ while not done:
         movement_input[1] += 1
 
     # Do all player stuff
-    player.update(movement_input,pygame,frame_count)
+    player.update(movement_input,pygame,pressed_up,pressed_down,pressed_left,pressed_right,frame_count)
     player.draw()
 
     # Do all enemy stuff
