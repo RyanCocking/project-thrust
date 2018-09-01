@@ -29,10 +29,10 @@ class Player:
         self.adjusted_screen_dimensions[1] = self.screen_dimensions[1]-self.rect.height
 
 
-    def update(self,movement_input,pygame,pressed_up,pressed_down,pressed_left,pressed_right,mouse_position,frame_count,world):
+    def update(self,movement_input,pygame,pressed_up,pressed_down,pressed_left,pressed_right,mouse_position,frame_count,world,i):
 
         # initilisations
-        frame_list = np.array((1,2))
+        frame_list = np.array((1,2,3,4,3,2))
 
         # Mouse position gives mirror angle
         x_distance=(mouse_position[0]-self.position[0])
@@ -100,23 +100,26 @@ class Player:
         # Walking animation
         else:
 
-            current_frame = frame_list[0]
+            current_frame = frame_list[i]
 
             if (frame_count%101 == 0):
 
-                current_frame = frame_list[1]
+                current_frame = frame_list[i+1]
+                i += 1
+                if (i == 5):
+                    i = 0
 
             if pressed_up:
-                self.sprite = pygame.image.load("images/player_rest_up_" + str(current_frame) + ".png")
+                self.sprite = pygame.image.load("images/player_walk_up_" + str(current_frame) + ".png")
                 self.orient = "up_"
             elif pressed_down:
-                self.sprite = pygame.image.load("images/player_rest_down_" + str(current_frame) + ".png")
+                self.sprite = pygame.image.load("images/player_walk_down_" + str(current_frame) + ".png")
                 self.orient = "down_"
             elif pressed_right:
-                self.sprite = pygame.image.load("images/player_rest_right_" + str(current_frame) + ".png")
+                self.sprite = pygame.image.load("images/player_walk_right_" + str(current_frame) + ".png")
                 self.orient = "right_"
             elif pressed_left:
-                self.sprite = pygame.image.load("images/player_rest_left_" + str(current_frame) + ".png")
+                self.sprite = pygame.image.load("images/player_walk_left_" + str(current_frame) + ".png")
                 self.orient = "left_"
 
 
