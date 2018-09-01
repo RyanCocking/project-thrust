@@ -6,8 +6,6 @@ from waves import Waves
 from player import Player
 from enemy import Enemy
 
-frame_count = 0
-
 # Start shit up
 pygame.init()
 
@@ -32,8 +30,6 @@ pressed_down=False
 
 # While we want to keep playing
 while not done:
-
-    frame_count += 1
 
     # Reset screen
     screen.fill((0,0,0))
@@ -74,11 +70,8 @@ while not done:
     if pressed_down:
         movement_input[1] += 1
 
-    # Do world stuff
-    world.draw(screen)
-
     # Do all player stuff
-    player.update(movement_input,pygame,frame_count)
+    player.update(movement_input)
     player.draw()
 
     # Do all enemy stuff
@@ -86,14 +79,8 @@ while not done:
         waves.update(world,screen,pygame)
     else:
         for enemy in world.enemies:
-            enemy.update(frame_count,player,world)
+            enemy.update(player)
             enemy.draw()
-
-    for projectile in world.projectiles:
-        projectile.update(world)
-        projectile.draw(screen,frame_count)
-        if projectile.dead:
-            world.projectiles.remove(projectile)
 
 
     # Redraw the screen

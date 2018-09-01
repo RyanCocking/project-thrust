@@ -11,7 +11,7 @@ class Waves:
     def update(self,world,screen,pygame):
 
         self.wave_number+=1
-        self.enemy_number = 2* self.wave_number
+        self.enemy_number = 1* self.wave_number
 
         for i in xrange(self.enemy_number):
             # Setup enemy

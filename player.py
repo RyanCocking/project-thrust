@@ -5,7 +5,7 @@ class Player:
 
     def __init__(self,position,screen,pygame):
         self.position = position
-        self.speed    = 0.12
+        self.speed    = 0.5
         self.screen   = screen
         self.sprite   = pygame.image.load("images/player.png")
         self.rect     = self.sprite.get_rect()
@@ -57,18 +57,13 @@ class Player:
         # Resting animation
         if (np.array_equal(prev_position,next_position) == True and frame_count%101 == 0):
 
-            print("frame:",frame_count)
-            print("index",frame_count%2)
-
             current_frame = frame_list[frame_count%2]
-            print("images/test" + str(current_frame) + ".png")
-            self.sprite = pygame.image.load("images/test" + str(current_frame) + ".png")
-
+            self.sprite = pygame.image.load("images/Ballboy_" + str(current_frame) + ".png")
 
         # Walking animation
         else:
             current_frame = frame_list[frame_count%2]
-            self.sprite = pygame.image.load("images/test" + str(current_frame) + ".png")
+            self.sprite = pygame.image.load("images/Ballboy_" + str(current_frame) + ".png")
 
     def draw(self):
         self.screen.blit(self.sprite, self.rect)
