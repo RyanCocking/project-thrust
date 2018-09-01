@@ -7,6 +7,7 @@ from player import Player
 from enemy import Enemy
 
 frame_count = 0
+start_state = True
 
 # Start shit up
 pygame.init()
