@@ -81,7 +81,7 @@ class Player:
         self.mirror_rect.y=self.position[1]+self.mirror_offset[1]
 
         for projectile in world.projectiles:
-            if projectile.rect.contains(self.mirror_rect):
+            if projectile.rect.colliderect(self.mirror_rect):
                 # Projectile hit mirror, reflect it
 
                 incidence_angle=(90.0-(self.mirror_angle)*(180.0/np.pi)-projectile.angle)
@@ -99,6 +99,11 @@ class Player:
                 self.health-=5
                 projectile.dead=True
                 world.projectiles.remove(projectile)
+
+
+            if self.health<1:
+                self.dead=True
+
 
         # ANIMATION
 

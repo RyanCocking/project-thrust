@@ -15,6 +15,7 @@ class Enemy:
          self.orient   = "down_"
          self.angle    = 0.0
          self.dead     = False
+         self.health   = 100
          self.firing_rate = 60
          self.draw_damage_text=False
          self.draw_timer = 0
