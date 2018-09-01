@@ -106,11 +106,11 @@ class Player:
              next_position=self.position+(normalised_movement*self.speed)
 
         # If next position is valid, move
-        if 0<next_position[0]<self.adjusted_screen_dimensions[0]:
+        if world.default_wall_rect.width<next_position[0]<self.adjusted_screen_dimensions[0]-world.default_wall_rect.width:
             self.position[0]=next_position[0]
             self.rect.x=self.position[0]
 
-        if 0<next_position[1]<self.adjusted_screen_dimensions[1]:
+        if world.default_wall_rect.height<next_position[1]<self.adjusted_screen_dimensions[1]-world.default_wall_rect.height:
             self.position[1]=next_position[1]
             self.rect.y=self.position[1]
 

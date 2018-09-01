@@ -5,8 +5,8 @@ import pygame
 pygame.init()
 pygame.font.init()
 
-screen_width=700
-screen_height=500
+screen_width=720
+screen_height=528
 
 screen = pygame.display.set_mode((screen_width, screen_height))
 

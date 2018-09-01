@@ -28,6 +28,8 @@ class Enemy:
         # initilisations
         frame_list = np.array((1,2))
 
+        self.firing_rate = 90+int(np.random.rand()*1)
+
         # Movement
         self.velocity = np.array([0,0])
 
@@ -102,7 +104,6 @@ class Enemy:
         if self.health<=0:
             self.dead=True
             world.score+=5
-
 
         if self.draw_damage_text:
             self.draw_timer+=100
