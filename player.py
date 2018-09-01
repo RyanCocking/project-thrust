@@ -13,6 +13,12 @@ class Player:
         self.rect.y   = self.position[1]
         self.orient   = "down_"
 
+        self.mirror_angle = 0
+        self.mirror_sprite = pygame.image.load("images/mirror.png")
+        self.mirror_rect = self.mirror_sprite.get_rect()
+        self.mirror_rect.x = self.position[0]
+        self.mirror_rect.y = self.position[1]
+
         # Get screen dimensions
         self.screen_dimensions=[0,0]
         self.screen_dimensions[0],self.screen_dimensions[1]=pygame.display.get_surface().get_size()
@@ -23,11 +29,21 @@ class Player:
         self.adjusted_screen_dimensions[1] = self.screen_dimensions[1]-self.rect.height
 
 
-    def update(self,movement_input,pygame,pressed_up,pressed_down,pressed_left,pressed_right,frame_count):
-        #print(frame_count)
+    def update(self,movement_input,pygame,pressed_up,pressed_down,pressed_left,pressed_right,mouse_position,frame_count,world):
 
         # initilisations
         frame_list = np.array((1,2))
+
+        # Mouse position gives mirror angle
+        x_distance=(mouse_position[0]-self.position[0])
+        y_distance=(mouse_position[1]-self.position[1])
+
+        if x_distance>0:
+            self.mirror_angle = np.arctan(y_distance/x_distance)
+        else:
+            self.mirror_angle = np.pi+np.arctan(y_distance/x_distance)
+
+        self.mirror_sprite=pygame.transform.rotate(pygame.image.load("images/mirror.png"),270+self.mirror_angle*(-180.0/np.pi))
 
         #Store previous position
         prev_position = self.position
@@ -49,9 +65,28 @@ class Player:
              if 0<next_position[0]<self.adjusted_screen_dimensions[0]:
                  self.position[0]=next_position[0]
                  self.rect.x=self.position[0]
+                 self.mirror_rect.x=self.position[0]
              if 0<next_position[1]<self.adjusted_screen_dimensions[1]:
                  self.position[1]=next_position[1]
                  self.rect.y=self.position[1]
+                 self.mirror_rect.y=self.position[1]
+
+
+        for projectile in world.projectiles:
+            if projectile.rect.contains(self.mirror_rect):
+                # Projectile hit mirror, reflect it
+
+                incidence_angle=(180.0-(self.mirror_angle)*(180.0/np.pi)-projectile.angle)
+                incidence_angle_rad=incidence_angle*(np.pi/180.0)
+
+                projectile_velocity_magnitude = np.linalg.norm(projectile.velocity)
+
+                projectile.velocity[0] = np.sin(90-incidence_angle_rad+(projectile.angle*(np.pi/180.0)))*projectile_velocity_magnitude
+                projectile.velocity[1] = np.cos(90-incidence_angle_rad+(projectile.angle*(np.pi/180.0)))*projectile_velocity_magnitude
+                projectile.sprite   = pygame.transform.rotate(projectile.sprite,incidence_angle)
+                projectile.reflected = True
+
+
 
         # ANIMATION
 
@@ -87,3 +122,4 @@ class Player:
 
     def draw(self):
         self.screen.blit(self.sprite, self.rect)
+        self.screen.blit(self.mirror_sprite, self.mirror_rect)
