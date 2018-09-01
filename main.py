@@ -1,24 +1,23 @@
 import pygame
 import numpy as np
 
+from world import World
+from waves import Waves
 from player import Player
 from enemy import Enemy
 
 # Start shit up
 pygame.init()
 
+world=World()
+waves=Waves()
+
 # Setup screen object, set resolution
-screen_width  = 400
-screen_height = 300
-screen = pygame.display.set_mode((screen_width, screen_height))
+screen = pygame.display.set_mode((world.screen_width, world.screen_height))
 
 # Setup player
-player_start_pos = np.array([screen_width/2.0,screen_height/2.0])
+player_start_pos = np.array([world.screen_width/2.0,world.screen_height/2.0])
 player = Player(player_start_pos,screen,pygame)
-
-# Setup enemy
-enemy_start_pos = np.array([100,100])
-enemy = Enemy(enemy_start_pos,screen,pygame)
 
 # Should we stop playing? (No)
 done = False
@@ -71,13 +70,18 @@ while not done:
     if pressed_down:
         movement_input[1] += 1
 
-    # Do all updating
+    # Do all player stuff
     player.update(movement_input)
-    enemy.update(player)
-
-    # Do all drawing
     player.draw()
-    enemy.draw()
+
+    # Do all enemy stuff
+    if not world.enemies:
+        waves.update(world,screen,pygame)
+    else:
+        for enemy in world.enemies:
+            enemy.update(player)
+            enemy.draw()
+
 
     # Redraw the screen
     pygame.display.flip()
