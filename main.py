@@ -5,7 +5,7 @@ from waves import Waves
 from player import Player
 from enemy import Enemy
 
-def main(pygame,screen,screen_width,screen_height):
+def main(pygame,screen,screen_width,screen_height,font,text_position):
 
     frame_count = 0
     start_state = True
@@ -102,8 +102,25 @@ def main(pygame,screen,screen_width,screen_height):
             if projectile.dead:
                 world.projectiles.remove(projectile)
 
-
-
         # Redraw the screen
         pygame.display.flip()
         clock.tick(100)
+
+    textsurface = font.render('You Died!', False, (255, 255, 255))
+    text_position=[60,world.screen_height/4.0]
+    textsurface_wave = font.render('Wave: '+str(waves.wave_number), False, (255, 255, 255))
+    text_position_wave=[60,world.screen_height/2.0]
+    textsurface_score = font.render('Score: '+str(world.score), False, (255, 255, 255))
+    text_position_score=[60,3*world.screen_height/4.0]
+    while done:
+        # Reset screen
+        screen.fill((0,0,0))
+        screen.blit(textsurface,text_position)
+        screen.blit(textsurface_wave,text_position_wave)
+        screen.blit(textsurface_score,text_position_score)
+        pygame.display.flip()
+
+        for event in pygame.event.get():
+            # If (x) button of window is clicked
+            if event.type == pygame.QUIT or event.type == pygame.KEYDOWN:
+                done = False

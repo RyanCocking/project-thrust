@@ -8,7 +8,7 @@ class Enemy:
     def __init__(self,position,screen):
          self.position = position
          self.velocity = np.array([0,0])
-         self.speed    = 0.05
+         self.speed    = 0.1
          self.screen   = screen
          self.sprite   = pygame.image.load("images/enemy_init_1.png")
          self.rect     = self.sprite.get_rect()
@@ -16,7 +16,7 @@ class Enemy:
          self.angle    = 0.0
          self.dead     = False
          self.health   = 100
-         self.firing_rate = 60
+         self.firing_rate = 90
          self.draw_damage_text=False
          self.draw_timer = 0
          self.frame    = 0
@@ -28,6 +28,8 @@ class Enemy:
     def update(self,player,frame_count,world):
         # initilisations
         frame_list = np.array((1,2))
+
+        self.firing_rate = 90+int(np.random.rand()*1)
 
         # Movement
         self.velocity = np.array([0,0])
@@ -62,57 +64,52 @@ class Enemy:
 
 
                 current_frame = frame_list[self.frame]
+                self.frame += 1
+                if (self.frame == 2):
+                    self.frame = 0
 
-                if (frame_count%51 == 0):
+            if self.velocity[1] > 0 or self.velocity[0] > 0:
+                self.sprite = pygame.image.load("images/enemy_walk_right_" + str(current_frame) + ".png")
+                self.orient = "right_"
+            elif self.velocity[1] < 0 or self.velocity[0] < 0:
+                self.sprite = pygame.image.load("images/enemy_walk_left_" + str(current_frame) + ".png")
+                self.orient = "left_"
 
-                    current_frame = frame_list[self.frame]
-                    self.frame += 1
-                    if (self.frame == 2):
-                        self.frame = 0
+        x_distance=(player.position[0]-self.position[0])
+        y_distance=(player.position[1]-self.position[1])
 
-                if self.velocity[1] > 0 or self.velocity[0] > 0:
-                    self.sprite = pygame.image.load("images/enemy_walk_right_" + str(current_frame) + ".png")
-                    self.orient = "right_"
-                elif self.velocity[1] < 0 or self.velocity[0] < 0:
-                    self.sprite = pygame.image.load("images/enemy_walk_left_" + str(current_frame) + ".png")
-                    self.orient = "left_"
+        if x_distance>0:
+            self.angle = np.arctan(y_distance/x_distance)
+        else:
+            self.angle = np.pi+np.arctan(y_distance/x_distance)
 
-            x_distance=(player.position[0]-self.position[0])
-            y_distance=(player.position[1]-self.position[1])
+        # Shooting
+        if frame_count%self.firing_rate==0:
+            new_bullet = Projectile(self.position,self.angle,self.screen,"laser")
+            world.projectiles.append(new_bullet)
 
-            if x_distance>0:
-                self.angle = np.arctan(y_distance/x_distance)
-            else:
-                self.angle = np.pi+np.arctan(y_distance/x_distance)
+        # Getting shot
+        for projectile in world.projectiles:
+            if self.rect.colliderect(projectile.rect) and projectile.reflected:
+                random_damage=np.random.rand(1)*4
+                total_damage=projectile.damage+random_damage
+                self.health-=total_damage
+                self.damage_taken=int(total_damage)
+                self.draw_damage_text=True
+                projectile.dead=True
+                world.projectiles.remove(projectile)
 
-            # Shooting
-            if frame_count%self.firing_rate==0:
-                new_bullet = Projectile(self.position,self.angle,self.screen,"laser")
-                world.projectiles.append(new_bullet)
+        if self.health<=0:
+            self.dead=True
+            world.score+=5
 
-            # Getting shot
-            for projectile in world.projectiles:
-                if self.rect.colliderect(projectile.rect) and projectile.reflected:
-                    random_damage=np.random.rand(1)*4
-                    total_damage=projectile.damage+random_damage
-                    self.health-=total_damage
-                    self.damage_taken=int(total_damage)
-                    self.draw_damage_text=True
-                    projectile.dead=True
-                    world.projectiles.remove(projectile)
+        if self.draw_damage_text:
+            self.draw_timer+=100
+            if self.draw_timer>3000:
+                self.draw_timer=0
+                self.draw_damage_text=False
 
-            if self.health<=0:
-                self.dead=True
-                world.score+=5
-
-
-            if self.draw_damage_text:
-                self.draw_timer+=100
-                if self.draw_timer>3000:
-                    self.draw_timer=0
-                    self.draw_damage_text=False
-
-    def draw(self,frame_count):
+    def draw(self):
         self.screen.blit(self.sprite, self.rect)
 
         if(self.draw_damage_text):
