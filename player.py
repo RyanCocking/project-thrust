@@ -57,7 +57,7 @@ class Player:
             self.mirror_angle = np.pi+np.arctan(y_distance/x_distance)
 
         self.mirror_offset = np.array([np.cos(self.mirror_angle),np.sin(self.mirror_angle)])*self.mirror_distance
-        self.mirror_sprite=pygame.transform.rotate(pygame.image.load("images/mirror.png"),270+self.mirror_angle*(-180.0/np.pi))
+        self.mirror_sprite=pygame.transform.rotate(pygame.image.load("images/mirror.png"),90+self.mirror_angle*(-180.0/np.pi))
 
         #Store previous position
         prev_position = self.position
@@ -125,6 +125,7 @@ class Player:
             if self.draw_timer>3000:
                 self.draw_timer=0
                 self.draw_damage_text=False
+
         # ANIMATION
 
         # Resting animation

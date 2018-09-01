@@ -11,7 +11,7 @@ class Projectile:
         self.angle        = angle
         self.velocity     = np.array([self.speed*np.cos(self.angle),self.speed*np.sin(self.angle)])
         self.screen       = screen
-        self.sprite       = pygame.transform.rotate(pygame.image.load("images/bullet.png"),270+angle*(-180.0/np.pi))
+        self.sprite       = pygame.transform.rotate(pygame.image.load("images/bullet1.png"),270+angle*(-180.0/np.pi))
         self.rect         = self.sprite.get_rect()
         self.acceleration = 0
         self.dead         = False

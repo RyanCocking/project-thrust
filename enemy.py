@@ -8,7 +8,7 @@ class Enemy:
     def __init__(self,position,screen):
          self.position = position
          self.velocity = np.array([0,0])
-         self.speed    = 0.05
+         self.speed    = 0.1
          self.screen   = screen
          self.sprite   = pygame.image.load("images/Ballboy_2.png")
          self.rect     = self.sprite.get_rect()
@@ -16,7 +16,7 @@ class Enemy:
          self.angle    = 0.0
          self.dead     = False
          self.health   = 100
-         self.firing_rate = 60
+         self.firing_rate = 90
          self.draw_damage_text=False
          self.draw_timer = 0
          self.frame    = 0

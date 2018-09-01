@@ -24,11 +24,10 @@ while not done:
         if event.type == pygame.QUIT:
             done = True
         elif event.type == pygame.KEYDOWN:          # check for key presses
-            if event.key == pygame.K_a:        # left arrow turns left
-                play=True
-                done=True
+            play=True
+            done=True
     screen.blit(textsurface,text_position)
     pygame.display.flip()
 
 if play:
-    main.main(pygame,screen,screen_width,screen_height)
+    main.main(pygame,screen,screen_width,screen_height,font,text_position)
