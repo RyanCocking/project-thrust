@@ -1,32 +1,42 @@
 import pygame
 import copy
+import numpy as np
 
 class World:
 
-    def __init__(self):
+    def __init__(self,screen_width,screen_height):
         self.score=0
         self.kills=0
 
         self.enemies = []
         self.projectiles = []
 
-        self.screen_width  = 500
-        self.screen_height = 400
+        self.screen_width  = screen_width
+        self.screen_height = screen_height
 
-        self.floor_sprite   = pygame.image.load("images/floor.png")
-        self.default_floor_rect     = self.floor_sprite.get_rect()
+        self.font = pygame.font.Font('images/slkscrb.ttf', 30)
+        self.wave_text_position=[2*self.screen_width/3.0,0]
+        self.score_text_position=[2*self.screen_width/3.0,20]
+
+        self.floor_sprites=[]
+        for i in xrange(1,7):
+            self.floor_sprites.append(pygame.image.load("images/floor_"+str(i)+".png"))
+
+        self.default_floor_rect     = self.floor_sprites[0].get_rect()
 
         floors_in_width=self.screen_width/self.default_floor_rect.width
         floors_in_height=self.screen_height/self.default_floor_rect.height
 
-        self.floor_rects = []
+        self.floor_tiles = []
+        floor_tile_weightings=[0.7,0.10,0.05,0.05,0.05,0.05]
         for x in xrange(floors_in_width+1):
             for y in xrange(floors_in_height+1):
                 position=[x*self.default_floor_rect.width,y*self.default_floor_rect.height]
                 new_rect=copy.copy(self.default_floor_rect)
                 new_rect.x=position[0]
                 new_rect.y=position[1]
-                self.floor_rects.append(new_rect)
+                floor_tile=[np.random.choice(self.floor_sprites, 1, p=floor_tile_weightings),new_rect]
+                self.floor_tiles.append(floor_tile)
 
         self.heart_rects=[]
         self.heart_sprite   = pygame.image.load("images/heart_full.png")
@@ -41,10 +51,10 @@ class World:
            rect.y=position[1]
            self.heart_rects.append(rect)
 
-    def draw(self,screen,player):
+    def draw(self,screen,player,waves):
 
-        for floor_rect in self.floor_rects:
-            screen.blit(self.floor_sprite, floor_rect)
+        for floor_tile in self.floor_tiles:
+            screen.blit(floor_tile[0][0], floor_tile[1])
 
         counter=0
         for heart_rect in self.heart_rects:
@@ -53,3 +63,10 @@ class World:
             else:
                 screen.blit(self.empty_heart_sprite, heart_rect)
             counter+=1
+
+
+        self.wavetextsurface = self.font.render('Wave: '+str(waves.wave_number), False, (0, 0, 0))
+        screen.blit(self.wavetextsurface,self.wave_text_position)
+
+        self.scoretextsurface = self.font.render('Score: '+str(self.score), False, (0, 0, 0))
+        screen.blit(self.scoretextsurface,self.score_text_position)

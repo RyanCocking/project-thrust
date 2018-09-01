@@ -7,7 +7,7 @@ class Projectile:
 
         self.type         = type
         self.position     = position
-        self.speed        = 1.0
+        self.speed        = 2.0
         self.angle        = angle
         self.velocity     = np.array([self.speed*np.cos(self.angle),self.speed*np.sin(self.angle)])
         self.screen       = screen

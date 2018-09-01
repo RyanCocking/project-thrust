@@ -21,7 +21,7 @@ class Enemy:
          self.draw_timer = 0
          self.frame    = 0
 
-         self.font = pygame.font.Font('images/slkscre.ttf', 20)
+         self.font = pygame.font.Font('images/slkscre.ttf', 25)
 
     def update(self,player,frame_count,world):
 
@@ -94,18 +94,19 @@ class Enemy:
                 random_damage=np.random.rand(1)*4
                 total_damage=projectile.damage+random_damage
                 self.health-=total_damage
-                self.damage_taken=total_damage
+                self.damage_taken=int(total_damage)
                 self.draw_damage_text=True
                 projectile.dead=True
                 world.projectiles.remove(projectile)
 
         if self.health<=0:
             self.dead=True
+            world.score+=5
 
 
         if self.draw_damage_text:
             self.draw_timer+=100
-            if self.draw_timer>1000:
+            if self.draw_timer>3000:
                 self.draw_timer=0
                 self.draw_damage_text=False
 
@@ -114,4 +115,5 @@ class Enemy:
 
         if(self.draw_damage_text):
             self.textsurface = self.font.render(str(self.damage_taken), False, (0, 0, 0))
-            self.screen.blit(self.textsurface,self.position)
+            self.textsurface.set_alpha(255-self.draw_timer/50)
+            self.screen.blit(self.textsurface,self.position-[0,0.01*self.draw_timer])

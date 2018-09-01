@@ -7,10 +7,7 @@ class Waves:
     def __init__(self,world):
 
         self.wave_number = 0
-        self.boss_wave   = False
-
-        self.font = pygame.font.Font('images/slkscrb.ttf', 30)
-        self.text_position=[2*world.screen_width/3.0,0]
+        self.boss_wave   = False        
 
     def update(self,world,screen,player,pygame):
 
@@ -27,7 +24,3 @@ class Waves:
                 distance_from_player = np.linalg.norm(player.position-enemy_start_pos)
             new_enemy=Enemy(enemy_start_pos,screen)
             world.enemies.append(new_enemy)
-
-    def draw(self,screen):
-        self.textsurface = self.font.render('Wave: '+str(self.wave_number), False, (0, 0, 0))
-        screen.blit(self.textsurface,self.text_position)
