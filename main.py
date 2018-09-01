@@ -8,7 +8,6 @@ from enemy import Enemy
 
 frame_count = 0
 start_state = True
-i =0
 
 # Start shit up
 pygame.init()
@@ -85,7 +84,7 @@ while not done:
     # Do all player stuff
     # Get mouse pos for mirror angle
     mouse_pos = pygame.mouse.get_pos()
-    player.update(movement_input,pygame,pressed_up,pressed_down,pressed_left,pressed_right,mouse_pos,frame_count,world,i)
+    player.update(movement_input,pygame,pressed_up,pressed_down,pressed_left,pressed_right,mouse_pos,frame_count,world)
     player.draw()
     if player.dead:
         done=True

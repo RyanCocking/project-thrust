@@ -9,7 +9,6 @@ class Enemy:
          self.position = position
          self.velocity = np.array([0,0])
          self.speed    = 0.05
-         self.health   = 100
          self.screen   = screen
          self.sprite   = pygame.image.load("images/Ballboy_2.png")
          self.rect     = self.sprite.get_rect()
@@ -19,8 +18,9 @@ class Enemy:
          self.firing_rate = 60
          self.draw_damage_text=False
          self.draw_timer = 0
-         self.font = pygame.font.Font('images/slkscre.ttf', 20)
+         self.frame    = 0
 
+         self.font = pygame.font.Font('images/slkscre.ttf', 20)
 
     def update(self,player,frame_count,world):
 
@@ -57,11 +57,15 @@ class Enemy:
         # Walking animation
         else:
 
-            current_frame = frame_list[0]
 
-            if (frame_count%101 == 0):
+            current_frame = frame_list[self.frame]
 
-                current_frame = frame_list[1]
+            if (frame_count%51 == 0):
+
+                current_frame = frame_list[self.frame]
+                self.frame += 1
+                if (self.frame == 2):
+                    self.frame = 0
 
             if self.velocity[1] > 0 or self.velocity[0] > 0:
                 self.sprite = pygame.image.load("images/enemy_walk_right_" + str(current_frame) + ".png")
@@ -96,6 +100,7 @@ class Enemy:
 
         if self.health<=0:
             self.dead=True
+
 
         if self.draw_damage_text:
             self.draw_timer+=100

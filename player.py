@@ -12,6 +12,7 @@ class Player:
         self.rect.x   = self.position[0]
         self.rect.y   = self.position[1]
         self.orient   = "down_"
+        self.frame    = 0
 
         self.health   = 100
         self.dead     = False
@@ -34,10 +35,10 @@ class Player:
         self.adjusted_screen_dimensions[1] = self.screen_dimensions[1]-self.rect.height
 
 
-    def update(self,movement_input,pygame,pressed_up,pressed_down,pressed_left,pressed_right,mouse_position,frame_count,world,i):
+    def update(self,movement_input,pygame,pressed_up,pressed_down,pressed_left,pressed_right,mouse_position,frame_count,world):
 
         # initilisations
-        frame_list = np.array((1,2,3,4,3,2))
+        frame_list = np.array((1,2,3,4))
 
         # Mouse position gives mirror angle
         x_distance=(mouse_position[0]-self.position[0])
@@ -80,7 +81,7 @@ class Player:
         self.mirror_rect.y=self.position[1]+self.mirror_offset[1]
 
         for projectile in world.projectiles:
-            if projectile.rect.colliderect(self.mirror_rect):
+            if projectile.rect.contains(self.mirror_rect):
                 # Projectile hit mirror, reflect it
 
                 incidence_angle=(90.0-(self.mirror_angle)*(180.0/np.pi)-projectile.angle)
@@ -92,14 +93,12 @@ class Player:
                 projectile.velocity[1] = np.cos(incidence_angle_rad+(projectile.angle*(np.pi/180.0)))*projectile_velocity_magnitude
                 projectile.sprite   = pygame.transform.rotate(projectile.sprite,180-incidence_angle_rad+(projectile.angle*(np.pi/180.0)))
                 projectile.reflected = True
+
+
             if projectile.rect.colliderect(self.rect):
                 self.health-=5
                 projectile.dead=True
                 world.projectiles.remove(projectile)
-
-        if(self.health<=0):
-            self.dead=True
-
 
         # ANIMATION
 
@@ -113,14 +112,15 @@ class Player:
         # Walking animation
         else:
 
-            current_frame = frame_list[i]
 
-            if (frame_count%101 == 0):
+            current_frame = frame_list[self.frame]
 
-                current_frame = frame_list[i+1]
-                i += 1
-                if (i == 5):
-                    i = 0
+            if (frame_count%51 == 0):
+
+                current_frame = frame_list[self.frame]
+                self.frame += 1
+                if (self.frame == 4):
+                    self.frame = 0
 
             if pressed_up:
                 self.sprite = pygame.image.load("images/player_walk_up_" + str(current_frame) + ".png")
