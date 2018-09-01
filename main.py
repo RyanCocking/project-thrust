@@ -96,9 +96,11 @@ def main(pygame,screen,screen_width,screen_height,font,text_position):
                 if enemy.dead:
                     world.enemies.remove(enemy)
 
-        for projectile in world.projectiles:
+        for loot in world.pickups:
+            loot.draw(screen)
 
-            projectile.update(world,frame_count,player)
+        for projectile in world.projectiles:
+            projectile.update(player,world)
             projectile.draw(screen,frame_count)
             if projectile.dead:
                 world.projectiles.remove(projectile)
@@ -107,7 +109,7 @@ def main(pygame,screen,screen_width,screen_height,font,text_position):
         pygame.display.flip()
         clock.tick(100)
 
-    textsurface = font.render('You Died!', False, (255, 255, 255))
+    textsurface = font.render('Game Over!', False, (255, 255, 255))
     text_position=[60,world.screen_height/4.0]
     textsurface_wave = font.render('Wave: '+str(waves.wave_number), False, (255, 255, 255))
     text_position_wave=[60,world.screen_height/2.0]

@@ -16,6 +16,7 @@ class Player:
         self.frame    = 0
 
         self.health   = 100
+        self.max_health = 100
         self.dead     = False
 
         self.mirror_angle = 0
@@ -123,6 +124,11 @@ class Player:
             if self.draw_timer>3000:
                 self.draw_timer=0
                 self.draw_damage_text=False
+
+        # Check for loot
+        for loot in world.pickups:
+            if(loot.rect.colliderect(self.rect)):
+                loot.pickup(player,world)
 
         # ANIMATION
 

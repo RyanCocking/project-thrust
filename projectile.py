@@ -12,15 +12,18 @@ class Projectile:
 
         self.dead         = False
         self.reflected    = False
+        self.timer        = 0
 
         if type == "laser":
             self.sprite       = pygame.transform.rotate(pygame.image.load("images/bullet1.png"),270+angle*(-180.0/np.pi))
             self.speed        = 1
             self.damage       = 5
+            self.lifetime     = 500
         elif type == "rocket":
             self.sprite       = pygame.transform.rotate(pygame.image.load("images/rocket1.png"),270+angle*(-180.0/np.pi))
             self.speed        = 2.
             self.damage       = 8
+            self.lifetime     = 300
 
         self.velocity     = np.array([self.speed*np.cos(self.angle),self.speed*np.sin(self.angle)])
         self.rect         = self.sprite.get_rect()
@@ -69,6 +72,11 @@ class Projectile:
             self.dead=True
         elif not 0<self.position[1]<world.screen_height:
             self.dead=True
+
+        if self.timer>self.lifetime:
+            self.dead=True
+
+        self.timer+=1
 
     def draw(self,screen,frame_count):
         screen.blit(self.sprite, self.rect)

@@ -18,6 +18,8 @@ class World:
         self.wave_text_position=[2*self.screen_width/3.0,0]
         self.score_text_position=[2*self.screen_width/3.0,20]
 
+        self.pickups=[]
+
         self.floor_sprites=[]
         for i in xrange(1,7):
             self.floor_sprites.append(pygame.image.load("images/floor_"+str(i)+".png"))

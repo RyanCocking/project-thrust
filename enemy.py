@@ -2,6 +2,7 @@ import numpy as np
 import pygame
 import copy
 from projectile import Projectile
+from loot import Loot
 # Enemy class
 
 class Enemy:
@@ -31,13 +32,7 @@ class Enemy:
          self.orient   = "left_"
          self.angle    = 0.0
          self.dead     = False
-<<<<<<< HEAD
 
-
-=======
-         self.health   = 25
-         self.firing_rate_original = 20
->>>>>>> be48692310772df183957b9f0c9432eb1435925b
          self.firing_rate = self.firing_rate_original
          self.draw_damage_text=False
          self.draw_timer = 0
@@ -167,8 +162,6 @@ class Enemy:
         # Shooting
         if frame_count%self.firing_rate==0:
 
-
-
             current_frame = frame_list[self.frame]
             self.frame += 1
             if (self.frame == 2):
@@ -177,9 +170,7 @@ class Enemy:
             if self.charging < 4:
                 self.sprite = pygame.image.load("images/enemy_charge_"+self.orient + str(current_frame) + ".png")
                 self.charging+=1
-                print (current_frame)
-
-            if self.charging >= 4:
+            elif self.charging >= 4:
                 bullet_position=copy.copy(self.position)
                 bullet_angle=copy.copy(self.angle)
                 if self.type==0:
@@ -207,6 +198,10 @@ class Enemy:
         if self.health<=0:
             self.dead=True
             world.score+=5
+            loot_position=copy.copy(self.position)
+            loot_type=0
+            new_loot=Loot(loot_position,loot_type)
+            world.pickups.append(new_loot)
 
         if self.draw_damage_text:
             self.draw_timer+=100
