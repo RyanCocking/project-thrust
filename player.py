@@ -63,7 +63,6 @@ class Player:
 
 
         # Walking animation
-        #elif (frame_count%101 == 0):
         else:
 
             current_frame = frame_list[0]

@@ -1,5 +1,4 @@
 import numpy as np
-from projectile import Projectile
 
 # Enemy class
 
@@ -8,18 +7,19 @@ class Enemy:
     def __init__(self,position,screen,pygame):
          self.position = position
          self.velocity = np.array([0,0])
-         self.speed    = 0.5
-         self.angle    = 0.0
-         self.firing_rate = 60
-
+         self.speed    = 0.05
          self.screen   = screen
          self.sprite   = pygame.image.load("images/Ballboy_2.png")
          self.rect     = self.sprite.get_rect()
+         self.orient   = "down_"
 
 
-    def update(self,frame_count,player,world):
+    def update(self,player,pygame,frame_count):
 
-        # Movement stuff ---------------------------------------------------
+        # initilisations
+        frame_list = np.array((1,2))
+
+        # Movement
         self.velocity = np.array([0,0])
 
         if self.position[0] > player.position[0]:
@@ -38,20 +38,36 @@ class Enemy:
         self.rect.x=self.position[0]
         self.rect.y=self.position[1]
 
-        x_distance=(player.position[0]-self.position[0])
-        y_distance=(player.position[1]-self.position[1])
+        # Animation
 
-        if x_distance>0:
-            self.angle = np.arctan(y_distance/x_distance)
+        # Stationary
+        if (self.velocity[0] == 0) and (self.velocity[1] == 0) and (current_frame%101 == 0):
+
+            current_frame = frame_list[frame_count%2]
+            self.sprite = pygame.image.load("images/enemy_rest_" + self.orient + str(current_frame) + ".png")
+
+        # Walking animation
         else:
-            self.angle = np.pi+np.arctan(y_distance/x_distance)
 
-        #--------------------------------------------------------------------------
+            current_frame = frame_list[0]
 
-        # Shooting
-        if frame_count%self.firing_rate==0:
-            new_bullet = Projectile(self.position,self.angle,self.screen,"laser")
-            world.projectiles.append(new_bullet)
+            if (frame_count%101 == 0):
+
+                current_frame = frame_list[1]
+
+            if self.velocity[1] > 0:
+                self.sprite = pygame.image.load("images/enemy_rest_up_" + str(current_frame) + ".png")
+                self.orient = "up_"
+            elif self.velocity[1] < 0:
+                self.sprite = pygame.image.load("images/enemy_rest_down_" + str(current_frame) + ".png")
+                self.orient = "down_"
+            elif self.velocity[0] > 0:
+                self.sprite = pygame.image.load("images/enemy_rest_right_" + str(current_frame) + ".png")
+                self.orient = "right_"
+            elif self.velocity[0] < 0:
+                self.sprite = pygame.image.load("images/enemy_rest_left_" + str(current_frame) + ".png")
+                self.orient = "left_"
+
 
 
     def draw(self):

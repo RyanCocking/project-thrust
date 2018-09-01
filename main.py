@@ -87,7 +87,7 @@ while not done:
         waves.update(world,screen,pygame)
     else:
         for enemy in world.enemies:
-            enemy.update(frame_count,player,world)
+            enemy.update(player,world,frame_count)
             enemy.draw()
 
     for projectile in world.projectiles:
