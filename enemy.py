@@ -12,7 +12,9 @@ class Enemy:
          self.sprite   = pygame.image.load("images/Ballboy_2.png")
          self.rect     = self.sprite.get_rect()
          self.orient   = "down_"
+         self.angle    = 0.0
          self.dead     = False
+         self.firing_rate = 90
 
 
     def update(self,player,frame_count,world):
