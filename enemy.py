@@ -6,19 +6,33 @@ from projectile import Projectile
 
 class Enemy:
 
-    def __init__(self,position,screen):
+    def __init__(self,type,position,screen):
+
+         self.type=type
+
+         if self.type==0: #Shooters
+             self.sprite   = pygame.image.load("images/enemy_init_1.png")
+             self.speed_original = 0.5
+             self.health   = 25
+             self.firing_rate_original = 100
+         elif self.type==1: # Rocket lads
+             self.sprite   = pygame.image.load("images/Trongle_L1.png")
+             self.speed_original = 0.35
+             self.health   = 40
+             self.firing_rate_original = 150
+
          self.position = position
          self.velocity = np.array([0,0])
-         self.speed_original = 0.5
+
          self.speed    = self.speed_original
          self.screen   = screen
-         self.sprite   = pygame.image.load("images/enemy_init_1.png")
+
          self.rect     = self.sprite.get_rect()
          self.orient   = "down_"
          self.angle    = 0.0
          self.dead     = False
-         self.health   = 25
-         self.firing_rate_original = 90
+
+
          self.firing_rate = self.firing_rate_original
          self.draw_damage_text=False
          self.draw_timer = 0
@@ -115,7 +129,8 @@ class Enemy:
             # Stationary
             if (all(self.velocity== 0) and (current_frame%101 == 0)):
                 current_frame = frame_list[frame_count%2]
-                self.sprite = pygame.image.load("images/enemy_rest_" + self.orient + str(current_frame) + ".png")
+                if self.type==0:
+                    self.sprite = pygame.image.load("images/enemy_rest_" + self.orient + str(current_frame) + ".png")
 
             # Walking animation
             else:
@@ -125,10 +140,12 @@ class Enemy:
                     self.frame = 0
 
                 if self.position[0]-self.prev_position[0] > 10:
-                    self.sprite = pygame.image.load("images/enemy_walk_right_" + str(current_frame) + ".png")
+                    if self.type==0:
+                        self.sprite = pygame.image.load("images/enemy_walk_right_" + str(current_frame) + ".png")
                     self.orient = "right_"
                 elif self.position[0]-self.prev_position[0] < -10:
-                    self.sprite = pygame.image.load("images/enemy_walk_left_" + str(current_frame) + ".png")
+                    if self.type==0:
+                        self.sprite = pygame.image.load("images/enemy_walk_left_" + str(current_frame) + ".png")
                     self.orient = "left_"
 
         x_distance=(player.position[0]-self.position[0])
@@ -143,7 +160,11 @@ class Enemy:
         if frame_count%self.firing_rate==0:
             bullet_position=copy.copy(self.position)
             bullet_angle=copy.copy(self.angle)
-            new_bullet = Projectile(bullet_position,bullet_angle,self.screen,"laser")
+            if self.type==0:
+                bullet_type="laser"
+            elif self.type==1:
+                bullet_type="rocket"
+            new_bullet = Projectile(bullet_position,bullet_angle,self.screen,bullet_type)
             world.projectiles.append(new_bullet)
 
         # Getting shot
@@ -184,7 +205,8 @@ class Enemy:
             self.firing_rate = 1e9
             self.speed       = 0.
             if (frame_count%7 == 0):
-                self.sprite = pygame.image.load("images/enemy_init_" + str(self.tele_count) + ".png")
+                if self.type==0:
+                    self.sprite = pygame.image.load("images/enemy_init_" + str(self.tele_count) + ".png")
                 self.tele_count += 1
 
             if (self.tele_count == 9):
