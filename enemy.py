@@ -1,5 +1,6 @@
 import numpy as np
 import pygame
+from projectile import Projectile
 # Enemy class
 
 class Enemy:
@@ -14,7 +15,8 @@ class Enemy:
          self.orient   = "down_"
          self.angle    = 0.0
          self.dead     = False
-         self.firing_rate = 90
+         self.firing_rate = 10
+         self.frame    = 0
 
 
     def update(self,player,frame_count,world):
@@ -52,11 +54,15 @@ class Enemy:
         # Walking animation
         else:
 
-            current_frame = frame_list[0]
 
-            if (frame_count%101 == 0):
+            current_frame = frame_list[self.frame]
 
-                current_frame = frame_list[1]
+            if (frame_count%51 == 0):
+
+                current_frame = frame_list[self.frame]
+                self.frame += 1
+                if (self.frame == 2):
+                    self.frame = 0
 
             if self.velocity[1] > 0 or self.velocity[0] > 0:
                 self.sprite = pygame.image.load("images/enemy_walk_right_" + str(current_frame) + ".png")
@@ -65,23 +71,6 @@ class Enemy:
                 self.sprite = pygame.image.load("images/enemy_walk_left_" + str(current_frame) + ".png")
                 self.orient = "left_"
 
-        x_distance=(player.position[0]-self.position[0])
-        y_distance=(player.position[1]-self.position[1])
-
-        if x_distance>0:
-            self.angle = np.arctan(y_distance/x_distance)
-        else:
-            self.angle = np.pi+np.arctan(y_distance/x_distance)
-
-        # Shooting
-        if frame_count%self.firing_rate==0:
-            new_bullet = Projectile(self.position,self.angle,self.screen,"laser")
-            world.projectiles.append(new_bullet)
-
-        # Getting shot
-        for projectile in world.projectiles:
-            if self.rect.colliderect(projectile.rect) and projectile.reflected:
-                self.dead=True
 
 
     def draw(self):
