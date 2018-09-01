@@ -17,7 +17,8 @@ class Enemy:
          self.angle    = 0.0
          self.dead     = False
          self.firing_rate = 60
-
+         self.draw_damage_text=False
+         self.draw_timer = 0
          self.font = pygame.font.Font('images/slkscre.ttf', 20)
 
 
@@ -88,12 +89,23 @@ class Enemy:
                 random_damage=np.random.rand(1)*4
                 total_damage=projectile.damage+random_damage
                 self.health-=total_damage
+                self.damage_taken=total_damage
+                self.draw_damage_text=True
                 projectile.dead=True
                 world.projectiles.remove(projectile)
 
         if self.health<=0:
             self.dead=True
 
+        if self.draw_damage_text:
+            self.draw_timer+=100
+            if self.draw_timer>1000:
+                self.draw_timer=0
+                self.draw_damage_text=False
 
     def draw(self):
         self.screen.blit(self.sprite, self.rect)
+
+        if(self.draw_damage_text):
+            self.textsurface = self.font.render(str(self.damage_taken), False, (0, 0, 0))
+            self.screen.blit(self.textsurface,self.position)

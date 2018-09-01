@@ -19,10 +19,10 @@ class Waves:
 
         for i in xrange(self.enemy_number):
             # Setup enemy
-            random = np.random.rand(2)
 
             distance_from_player=0
             while distance_from_player<40:
+                random = np.random.rand(2)
                 enemy_start_pos = np.array([world.screen_width*random[0],world.screen_height*random[1]])
                 distance_from_player = np.linalg.norm(player.position-enemy_start_pos)
             new_enemy=Enemy(enemy_start_pos,screen)

@@ -14,6 +14,8 @@ i =0
 pygame.init()
 pygame.font.init()
 
+clock = pygame.time.Clock()
+
 world=World()
 waves=Waves(world)
 
@@ -108,3 +110,4 @@ while not done:
 
     # Redraw the screen
     pygame.display.flip()
+    clock.tick(100)
