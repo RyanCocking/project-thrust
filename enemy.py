@@ -8,8 +8,9 @@ class Enemy:
     def __init__(self,position,screen,pygame):
          self.position = position
          self.velocity = np.array([0,0])
-         self.speed    = 0.5
+         self.speed    = 0.05
          self.angle    = 0.0
+         self.dead     = False
          self.firing_rate = 60
 
          self.screen   = screen
@@ -52,6 +53,11 @@ class Enemy:
         if frame_count%self.firing_rate==0:
             new_bullet = Projectile(self.position,self.angle,self.screen,"laser")
             world.projectiles.append(new_bullet)
+
+        # Getting shot
+        for projectile in world.projectiles:
+            if self.rect.contains(projectile.rect) and projectile.reflected:
+                self.dead=True
 
 
     def draw(self):

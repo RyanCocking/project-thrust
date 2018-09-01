@@ -47,22 +47,22 @@ while not done:
         if event.type == pygame.QUIT:
             done = True
         elif event.type == pygame.KEYDOWN:          # check for key presses
-            if event.key == pygame.K_LEFT:        # left arrow turns left
+            if event.key == pygame.K_a:        # left arrow turns left
                 pressed_left = True
-            elif event.key == pygame.K_RIGHT:     # right arrow turns right
+            elif event.key == pygame.K_d:     # right arrow turns right
                 pressed_right = True
-            elif event.key == pygame.K_UP:        # up arrow goes up
+            elif event.key == pygame.K_w:        # up arrow goes up
                 pressed_up = True
-            elif event.key == pygame.K_DOWN:     # down arrow goes down
+            elif event.key == pygame.K_s:     # down arrow goes down
                 pressed_down = True
         elif event.type == pygame.KEYUP:            # check for key releases
-            if event.key == pygame.K_LEFT:        # left arrow turns left
+            if event.key == pygame.K_a:        # left arrow turns left
                 pressed_left = False
-            elif event.key == pygame.K_RIGHT:     # right arrow turns right
+            elif event.key == pygame.K_d:     # right arrow turns right
                 pressed_right = False
-            elif event.key == pygame.K_UP:        # up arrow goes up
+            elif event.key == pygame.K_w:        # up arrow goes up
                 pressed_up = False
-            elif event.key == pygame.K_DOWN:     # down arrow goes down
+            elif event.key == pygame.K_s:     # down arrow goes down
                 pressed_down = False
 
     if pressed_left:
@@ -78,7 +78,9 @@ while not done:
     world.draw(screen)
 
     # Do all player stuff
-    player.update(movement_input,pygame,pressed_up,pressed_down,pressed_left,pressed_right,frame_count)
+    # Get mouse pos for mirror angle
+    mouse_pos = pygame.mouse.get_pos()
+    player.update(movement_input,pygame,pressed_up,pressed_down,pressed_left,pressed_right,mouse_pos,frame_count,world)
     player.draw()
 
     # Do all enemy stuff
@@ -88,6 +90,8 @@ while not done:
         for enemy in world.enemies:
             enemy.update(frame_count,player,world)
             enemy.draw()
+            if enemy.dead:
+                world.enemies.remove(enemy)
 
     for projectile in world.projectiles:
         projectile.update(world)

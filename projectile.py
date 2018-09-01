@@ -8,12 +8,14 @@ class Projectile:
         self.type         = type
         self.position     = position
         self.speed        = 1.0
-        self.velocity     = np.array([self.speed*np.cos(angle),self.speed*np.sin(angle)])
+        self.angle        = angle
+        self.velocity     = np.array([self.speed*np.cos(self.angle),self.speed*np.sin(self.angle)])
         self.screen       = screen
         self.sprite       = pygame.transform.rotate(pygame.image.load("images/bullet.png"),270+angle*(-180.0/np.pi))
         self.rect         = self.sprite.get_rect()
         self.acceleration = 0
         self.dead         = False
+        self.reflected    = False
 
         #if type == "rocket":
         #    self.acceleration = 0.01

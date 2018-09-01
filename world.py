@@ -10,8 +10,8 @@ class World:
         self.enemies = []
         self.projectiles = []
 
-        self.screen_width  = 400
-        self.screen_height = 300
+        self.screen_width  = 500
+        self.screen_height = 400
 
         self.floor_sprite   = pygame.image.load("images/floor.png")
         self.default_floor_rect     = self.floor_sprite.get_rect()
