@@ -15,9 +15,10 @@ class Enemy:
          self.orient   = "down_"
          self.angle    = 0.0
          self.dead     = False
-         self.firing_rate = 10
+         self.firing_rate = 60
          self.frame    = 0
 
+         self.font = pygame.font.Font('images/slkscre.ttf', 20)
 
     def update(self,player,frame_count,world):
 

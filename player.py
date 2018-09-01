@@ -95,6 +95,10 @@ class Player:
                 projectile.reflected = True
 
 
+            if projectile.rect.colliderect(self.rect):
+                self.health-=5
+                projectile.dead=True
+                world.projectiles.remove(projectile)
 
         # ANIMATION
 

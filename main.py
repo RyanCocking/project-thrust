@@ -11,9 +11,10 @@ start_state = True
 
 # Start shit up
 pygame.init()
+pygame.font.init()
 
 world=World()
-waves=Waves()
+waves=Waves(world)
 
 # Setup screen object, set resolution
 screen = pygame.display.set_mode((world.screen_width, world.screen_height))
@@ -88,7 +89,7 @@ while not done:
 
     # Do all enemy stuff
     if not world.enemies:
-        waves.update(world,screen,pygame)
+        waves.update(world,screen,player,pygame)
     else:
         for enemy in world.enemies:
             enemy.update(player,frame_count,world)
@@ -102,6 +103,7 @@ while not done:
         if projectile.dead:
             world.projectiles.remove(projectile)
 
+    waves.draw(screen)
 
     # Redraw the screen
     pygame.display.flip()
