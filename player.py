@@ -34,6 +34,13 @@ class Player:
         self.adjusted_screen_dimensions[0] = self.screen_dimensions[0]-self.rect.width
         self.adjusted_screen_dimensions[1] = self.screen_dimensions[1]-self.rect.height
 
+        self.font = pygame.font.Font('images/slkscre.ttf', 20)
+        self.draw_damage_text=False
+        self.draw_timer = 0
+        self.damage_taken = 0
+
+
+
 
     def update(self,movement_input,pygame,pressed_up,pressed_down,pressed_left,pressed_right,mouse_position,frame_count,world):
 
@@ -81,7 +88,7 @@ class Player:
         self.mirror_rect.y=self.position[1]+self.mirror_offset[1]
 
         for projectile in world.projectiles:
-            if projectile.rect.contains(self.mirror_rect):
+            if projectile.rect.colliderect(self.mirror_rect):
                 # Projectile hit mirror, reflect it
 
                 incidence_angle=(90.0-(self.mirror_angle)*(180.0/np.pi)-projectile.angle)
@@ -96,10 +103,24 @@ class Player:
 
 
             if projectile.rect.colliderect(self.rect):
-                self.health-=5
+                random_damage=np.random.rand(1)*4
+                total_damage=projectile.damage+random_damage
+                self.health-=total_damage
+                self.damage_taken=int(total_damage)
+                self.draw_damage_text=True
                 projectile.dead=True
                 world.projectiles.remove(projectile)
 
+                
+
+        if self.health<1:
+            self.dead=True
+
+        if self.draw_damage_text:
+            self.draw_timer+=100
+            if self.draw_timer>2000:
+                self.draw_timer=0
+                self.draw_damage_text=False
         # ANIMATION
 
         # Resting animation
@@ -139,3 +160,8 @@ class Player:
     def draw(self):
         self.screen.blit(self.sprite, self.rect)
         self.screen.blit(self.mirror_sprite, self.mirror_rect)
+
+        if(self.draw_damage_text):
+            self.textsurface = self.font.render(str(self.damage_taken), False, (255, 38, 0))
+            self.textsurface.set_alpha(255-self.draw_timer/50)
+            self.screen.blit(self.textsurface,self.position-[0,0.01*self.draw_timer])
