@@ -88,7 +88,7 @@ class Enemy:
 
         # Getting shot
         for projectile in world.projectiles:
-            if self.rect.contains(projectile.rect) and projectile.reflected:
+            if self.rect.colliderect(projectile.rect) and projectile.reflected:
                 self.dead=True
 
 

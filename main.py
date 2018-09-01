@@ -76,13 +76,15 @@ while not done:
         movement_input[1] += 1
 
     # Do world stuff
-    world.draw(screen)
+    world.draw(screen,player)
 
     # Do all player stuff
     # Get mouse pos for mirror angle
     mouse_pos = pygame.mouse.get_pos()
     player.update(movement_input,pygame,pressed_up,pressed_down,pressed_left,pressed_right,mouse_pos,frame_count,world)
     player.draw()
+    if player.dead:
+        done=True
 
     # Do all enemy stuff
     if not world.enemies:

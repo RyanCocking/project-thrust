@@ -13,6 +13,9 @@ class Player:
         self.rect.y   = self.position[1]
         self.orient   = "down_"
 
+        self.health   = 100
+        self.dead     = False
+
         self.mirror_angle = 0
         self.mirror_distance = 25
         self.mirror_offset = np.array([np.cos(self.mirror_angle),np.sin(self.mirror_angle)])*self.mirror_distance
@@ -77,7 +80,7 @@ class Player:
         self.mirror_rect.y=self.position[1]+self.mirror_offset[1]
 
         for projectile in world.projectiles:
-            if projectile.rect.contains(self.mirror_rect):
+            if projectile.rect.colliderect(self.mirror_rect):
                 # Projectile hit mirror, reflect it
 
                 incidence_angle=(90.0-(self.mirror_angle)*(180.0/np.pi)-projectile.angle)
@@ -89,7 +92,13 @@ class Player:
                 projectile.velocity[1] = np.cos(incidence_angle_rad+(projectile.angle*(np.pi/180.0)))*projectile_velocity_magnitude
                 projectile.sprite   = pygame.transform.rotate(projectile.sprite,180-incidence_angle_rad+(projectile.angle*(np.pi/180.0)))
                 projectile.reflected = True
+            if projectile.rect.colliderect(self.rect):
+                self.health-=10
+                projectile.dead=True
+                world.projectiles.remove(projectile)
 
+        if(self.health<=0):
+            self.dead=True
 
 
         # ANIMATION

@@ -28,7 +28,28 @@ class World:
                 new_rect.y=position[1]
                 self.floor_rects.append(new_rect)
 
-    def draw(self,screen):
+        self.heart_rects=[]
+        self.heart_sprite   = pygame.image.load("images/heart_full.png")
+        self.empty_heart_sprite = pygame.image.load("images/heart_empty.png")
+        self.heart_rect     = self.heart_sprite.get_rect()
+
+        # 10 hearts positioned along top left of screen
+        for i in xrange(10):
+           position=[10+i*self.heart_rect.width,5]
+           rect=copy.copy(self.heart_rect)
+           rect.x=position[0]
+           rect.y=position[1]
+           self.heart_rects.append(rect)
+
+    def draw(self,screen,player):
 
         for floor_rect in self.floor_rects:
             screen.blit(self.floor_sprite, floor_rect)
+
+        counter=0
+        for heart_rect in self.heart_rects:
+            if(player.health/10>counter):
+                screen.blit(self.heart_sprite, heart_rect)
+            else:
+                screen.blit(self.empty_heart_sprite, heart_rect)
+            counter+=1
