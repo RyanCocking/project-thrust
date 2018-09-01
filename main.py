@@ -2,16 +2,23 @@ import pygame
 import numpy as np
 
 from player import Player
+from enemy import Enemy
 
 # Start shit up
 pygame.init()
 
-# Setup player
-player_start_pos = np.array([0,0])
-player = Player(player_start_pos,pygame)
-
 # Setup screen object, set resolution
-screen = pygame.display.set_mode((1366, 768))
+screen_width  = 400
+screen_height = 300
+screen = pygame.display.set_mode((screen_width, screen_height))
+
+# Setup player
+player_start_pos = np.array([screen_width/2.0,screen_height/2.0])
+player = Player(player_start_pos,screen,pygame)
+
+# Setup enemy
+enemy_start_pos = np.array([100,100])
+enemy = Enemy(enemy_start_pos,screen,pygame)
 
 # Should we stop playing? (No)
 done = False
@@ -66,9 +73,11 @@ while not done:
 
     # Do all updating
     player.update(movement_input)
+    enemy.update(player)
 
     # Do all drawing
-    player.draw(screen)
+    player.draw()
+    enemy.draw()
 
     # Redraw the screen
     pygame.display.flip()
