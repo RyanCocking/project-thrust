@@ -12,7 +12,7 @@ class Enemy:
          self.speed    = 0.05
          self.angle    = 0.0
          self.dead     = False
-         self.firing_rate = 60
+         self.firing_rate = 90
          self.screen   = screen
          self.sprite   = pygame.image.load("images/Ballboy_2.png")
          self.rect     = self.sprite.get_rect()

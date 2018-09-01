@@ -14,6 +14,8 @@ class Player:
         self.orient   = "down_"
 
         self.mirror_angle = 0
+        self.mirror_distance = 25
+        self.mirror_offset = np.array([np.cos(self.mirror_angle),np.sin(self.mirror_angle)])*self.mirror_distance
         self.mirror_sprite = pygame.image.load("images/mirror.png")
         self.mirror_rect = self.mirror_sprite.get_rect()
         self.mirror_rect.x = self.position[0]
@@ -43,6 +45,7 @@ class Player:
         else:
             self.mirror_angle = np.pi+np.arctan(y_distance/x_distance)
 
+        self.mirror_offset = np.array([np.cos(self.mirror_angle),np.sin(self.mirror_angle)])*self.mirror_distance
         self.mirror_sprite=pygame.transform.rotate(pygame.image.load("images/mirror.png"),270+self.mirror_angle*(-180.0/np.pi))
 
         #Store previous position
@@ -65,12 +68,13 @@ class Player:
              if 0<next_position[0]<self.adjusted_screen_dimensions[0]:
                  self.position[0]=next_position[0]
                  self.rect.x=self.position[0]
-                 self.mirror_rect.x=self.position[0]
+
              if 0<next_position[1]<self.adjusted_screen_dimensions[1]:
                  self.position[1]=next_position[1]
                  self.rect.y=self.position[1]
-                 self.mirror_rect.y=self.position[1]
 
+        self.mirror_rect.x=self.position[0]+self.mirror_offset[0]
+        self.mirror_rect.y=self.position[1]+self.mirror_offset[1]
 
         for projectile in world.projectiles:
             if projectile.rect.contains(self.mirror_rect):
