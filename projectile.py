@@ -23,6 +23,7 @@ class Projectile:
         if type == "laser":
             self.acceleration = 0
             self.speed        = 1
+            self.damage       = 5
 
 
     def update(self,world):

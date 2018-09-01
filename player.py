@@ -93,7 +93,7 @@ class Player:
                 projectile.sprite   = pygame.transform.rotate(projectile.sprite,180-incidence_angle_rad+(projectile.angle*(np.pi/180.0)))
                 projectile.reflected = True
             if projectile.rect.colliderect(self.rect):
-                self.health-=10
+                self.health-=5
                 projectile.dead=True
                 world.projectiles.remove(projectile)
 

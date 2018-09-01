@@ -1,5 +1,6 @@
 import numpy as np
 import pygame
+from projectile import Projectile
 # Enemy class
 
 class Enemy:
@@ -8,13 +9,16 @@ class Enemy:
          self.position = position
          self.velocity = np.array([0,0])
          self.speed    = 0.05
+         self.health   = 100
          self.screen   = screen
          self.sprite   = pygame.image.load("images/Ballboy_2.png")
          self.rect     = self.sprite.get_rect()
          self.orient   = "down_"
          self.angle    = 0.0
          self.dead     = False
-         self.firing_rate = 90
+         self.firing_rate = 60
+
+         self.font = pygame.font.Font('images/slkscre.ttf', 20)
 
 
     def update(self,player,frame_count,world):
@@ -81,7 +85,14 @@ class Enemy:
         # Getting shot
         for projectile in world.projectiles:
             if self.rect.colliderect(projectile.rect) and projectile.reflected:
-                self.dead=True
+                random_damage=np.random.rand(1)*4
+                total_damage=projectile.damage+random_damage
+                self.health-=total_damage
+                projectile.dead=True
+                world.projectiles.remove(projectile)
+
+        if self.health<=0:
+            self.dead=True
 
 
     def draw(self):
