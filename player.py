@@ -9,6 +9,8 @@ class Player:
         self.screen   = screen
         self.sprite   = pygame.image.load("images/player.png")
         self.rect     = self.sprite.get_rect()
+        self.rect.x   = self.position[0]
+        self.rect.y   = self.position[1]
 
         # Get screen dimensions
         self.screen_dimensions=[0,0]
@@ -22,8 +24,8 @@ class Player:
 
     def update(self,movement_input):
 
+        # Movement of player
         if np.count_nonzero(movement_input)>0:
-            # Movement of player
             # See if next position is valid
 
             # Normalise movement vector
