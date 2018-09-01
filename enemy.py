@@ -1,7 +1,5 @@
-import pygame
 import numpy as np
-from projectile import Projectile
-
+import pygame
 # Enemy class
 
 class Enemy:
@@ -10,13 +8,13 @@ class Enemy:
          self.position = position
          self.velocity = np.array([0,0])
          self.speed    = 0.05
-         self.angle    = 0.0
-         self.dead     = False
-         self.firing_rate = 90
          self.screen   = screen
          self.sprite   = pygame.image.load("images/Ballboy_2.png")
          self.rect     = self.sprite.get_rect()
          self.orient   = "down_"
+         self.angle    = 0.0
+         self.dead     = False
+         self.firing_rate = 90
 
 
     def update(self,player,frame_count,world):
@@ -60,17 +58,11 @@ class Enemy:
 
                 current_frame = frame_list[1]
 
-            if self.velocity[1] > 0:
-                self.sprite = pygame.image.load("images/player_rest_up_" + str(current_frame) + ".png")
-                self.orient = "up_"
-            elif self.velocity[1] < 0:
-                self.sprite = pygame.image.load("images/player_rest_down_" + str(current_frame) + ".png")
-                self.orient = "down_"
-            elif self.velocity[0] > 0:
-                self.sprite = pygame.image.load("images/player_rest_right_" + str(current_frame) + ".png")
+            if self.velocity[1] > 0 or self.velocity[0] > 0:
+                self.sprite = pygame.image.load("images/enemy_walk_right_" + str(current_frame) + ".png")
                 self.orient = "right_"
-            elif self.velocity[0] < 0:
-                self.sprite = pygame.image.load("images/player_rest_left_" + str(current_frame) + ".png")
+            elif self.velocity[1] < 0 or self.velocity[0] < 0:
+                self.sprite = pygame.image.load("images/enemy_walk_left_" + str(current_frame) + ".png")
                 self.orient = "left_"
 
         x_distance=(player.position[0]-self.position[0])
