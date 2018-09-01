@@ -22,23 +22,53 @@ class Player:
         self.adjusted_screen_dimensions[1] = self.screen_dimensions[1]-self.rect.height
 
 
-    def update(self,movement_input):
+    def update(self,movement_input,pygame,frame_count):
+        #print(frame_count)
+
+        # initilisations
+        frame_list = np.array((1,2))
+
+        #Store previous position
+        prev_position = self.position
+        next_position = self.position
 
         # Movement of player
         if np.count_nonzero(movement_input)>0:
             # See if next position is valid
 
-            # Normalise movement vector
-            normalised_movement = movement_input / np.linalg.norm(movement_input)
-            next_position=self.position+(normalised_movement*self.speed)
+             #Store previous position
+             prev_position = self.position
+             next_position = self.position
 
-            # If next position is valid, move
-            if 0<next_position[0]<self.adjusted_screen_dimensions[0]:
-                self.position[0]=next_position[0]
-                self.rect.x=self.position[0]
-            if 0<next_position[1]<self.adjusted_screen_dimensions[1]:
-                self.position[1]=next_position[1]
-                self.rect.y=self.position[1]
+             # Normalise movement vector
+             normalised_movement = movement_input / np.linalg.norm(movement_input)
+             next_position=self.position+(normalised_movement*self.speed)
+
+             # If next position is valid, move
+             if 0<next_position[0]<self.adjusted_screen_dimensions[0]:
+                 self.position[0]=next_position[0]
+                 self.rect.x=self.position[0]
+             if 0<next_position[1]<self.adjusted_screen_dimensions[1]:
+                 self.position[1]=next_position[1]
+                 self.rect.y=self.position[1]
+
+        # ANIMATION
+
+        # Resting animation
+        if (np.array_equal(prev_position,next_position) == True and frame_count%101 == 0):
+
+            print("frame:",frame_count)
+            print("index",frame_count%2)
+
+            current_frame = frame_list[frame_count%2]
+            print("images/test" + str(current_frame) + ".png")
+            self.sprite = pygame.image.load("images/test" + str(current_frame) + ".png")
+
+
+        # Walking animation
+        else:
+            current_frame = frame_list[frame_count%2]
+            self.sprite = pygame.image.load("images/test" + str(current_frame) + ".png")
 
     def draw(self):
         self.screen.blit(self.sprite, self.rect)
