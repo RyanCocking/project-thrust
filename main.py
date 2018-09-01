@@ -20,7 +20,7 @@ def main(pygame,screen,screen_width,screen_height,font,text_position):
 
     # Setup player
     player_start_pos = np.array([world.screen_width/2.0,world.screen_height/2.0])
-    player = Player(player_start_pos,screen,pygame)
+    player = Player(player_start_pos,screen)
 
     # Should we stop playing? (No)
     done = False

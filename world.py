@@ -88,6 +88,7 @@ class World:
            rect.y=position[1]
            self.heart_rects.append(rect)
 
+
     def draw(self,screen,player,waves):
 
         for floor_tile in self.floor_tiles:
