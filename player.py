@@ -76,14 +76,14 @@ class Player:
             if projectile.rect.contains(self.mirror_rect):
                 # Projectile hit mirror, reflect it
 
-                incidence_angle=(180.0-(self.mirror_angle)*(180.0/np.pi)-projectile.angle)
+                incidence_angle=(90.0-(self.mirror_angle)*(180.0/np.pi)-projectile.angle)
                 incidence_angle_rad=incidence_angle*(np.pi/180.0)
 
                 projectile_velocity_magnitude = np.linalg.norm(projectile.velocity)
 
-                projectile.velocity[0] = np.sin(90-incidence_angle_rad+(projectile.angle*(np.pi/180.0)))*projectile_velocity_magnitude
-                projectile.velocity[1] = np.cos(90-incidence_angle_rad+(projectile.angle*(np.pi/180.0)))*projectile_velocity_magnitude
-                projectile.sprite   = pygame.transform.rotate(projectile.sprite,incidence_angle)
+                projectile.velocity[0] = np.sin(incidence_angle_rad+(projectile.angle*(np.pi/180.0)))*projectile_velocity_magnitude
+                projectile.velocity[1] = np.cos(incidence_angle_rad+(projectile.angle*(np.pi/180.0)))*projectile_velocity_magnitude
+                projectile.sprite   = pygame.transform.rotate(projectile.sprite,180-incidence_angle_rad+(projectile.angle*(np.pi/180.0)))
                 projectile.reflected = True
 
 
