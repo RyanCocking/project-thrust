@@ -28,17 +28,23 @@ class Enemy:
          self.screen   = screen
 
          self.rect     = self.sprite.get_rect()
-         self.orient   = "down_"
+         self.orient   = "left_"
          self.angle    = 0.0
          self.dead     = False
+<<<<<<< HEAD
 
 
+=======
+         self.health   = 25
+         self.firing_rate_original = 20
+>>>>>>> be48692310772df183957b9f0c9432eb1435925b
          self.firing_rate = self.firing_rate_original
          self.draw_damage_text=False
          self.draw_timer = 0
          self.frame    = 0
          self.teleport = True
          self.tele_count = 1
+         self.charging  = 1
 
          self.chasing=True
          self.fleeing=False
@@ -156,16 +162,34 @@ class Enemy:
         else:
             self.angle = np.pi+np.arctan(y_distance/x_distance)
 
+
+
         # Shooting
         if frame_count%self.firing_rate==0:
-            bullet_position=copy.copy(self.position)
-            bullet_angle=copy.copy(self.angle)
-            if self.type==0:
-                bullet_type="laser"
-            elif self.type==1:
-                bullet_type="rocket"
-            new_bullet = Projectile(bullet_position,bullet_angle,self.screen,bullet_type)
-            world.projectiles.append(new_bullet)
+
+
+
+            current_frame = frame_list[self.frame]
+            self.frame += 1
+            if (self.frame == 2):
+                self.frame = 0
+
+            if self.charging < 4:
+                self.sprite = pygame.image.load("images/enemy_charge_"+self.orient + str(current_frame) + ".png")
+                self.charging+=1
+                print (current_frame)
+
+            if self.charging >= 4:
+                bullet_position=copy.copy(self.position)
+                bullet_angle=copy.copy(self.angle)
+                if self.type==0:
+                    bullet_type="laser"
+                elif self.type==1:
+                    bullet_type="rocket"
+                new_bullet = Projectile(bullet_position,bullet_angle,self.screen,bullet_type)
+                world.projectiles.append(new_bullet)
+                self.charging = 0
+
 
         # Getting shot
         for projectile in world.projectiles:

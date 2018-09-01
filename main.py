@@ -97,7 +97,8 @@ def main(pygame,screen,screen_width,screen_height,font,text_position):
                     world.enemies.remove(enemy)
 
         for projectile in world.projectiles:
-            projectile.update(player,world)
+
+            projectile.update(world,frame_count,player)
             projectile.draw(screen,frame_count)
             if projectile.dead:
                 world.projectiles.remove(projectile)
