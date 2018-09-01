@@ -92,7 +92,7 @@ def main(pygame,screen,screen_width,screen_height):
         else:
             for enemy in world.enemies:
                 enemy.update(player,frame_count,world)
-                enemy.draw()
+                enemy.draw(frame_count)
                 if enemy.dead:
                     world.enemies.remove(enemy)
 
