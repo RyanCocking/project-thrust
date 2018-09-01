@@ -19,7 +19,7 @@ class Waves:
             # Setup enemy
             enemy_type=0
             distance_from_player=0
-            while distance_from_player<20:
+            while distance_from_player<10:
                 random = np.random.rand(2)
                 enemy_start_pos = np.array([world.default_wall_rect.width+(world.screen_width-2.0*world.default_wall_rect.width)*random[0],world.default_wall_rect.height+(world.screen_height-2.0*world.default_wall_rect.height)*random[1]])
                 distance_from_player = np.linalg.norm(player.position-enemy_start_pos)
@@ -30,7 +30,7 @@ class Waves:
             # Setup enemy
             enemy_type=1
             distance_from_player=0
-            while distance_from_player<20:
+            while distance_from_player<10:
                 random = np.random.rand(2)
                 enemy_start_pos = np.array([world.default_wall_rect.width+(world.screen_width-2.0*world.default_wall_rect.width)*random[0],world.default_wall_rect.height+(world.screen_height-2.0*world.default_wall_rect.height)*random[1]])
                 distance_from_player = np.linalg.norm(player.position-enemy_start_pos)

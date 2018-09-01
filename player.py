@@ -128,7 +128,7 @@ class Player:
         # Check for loot
         for loot in world.pickups:
             if(loot.rect.colliderect(self.rect)):
-                loot.pickup(player,world)
+                loot.pickup(self,world)
 
         # ANIMATION
 

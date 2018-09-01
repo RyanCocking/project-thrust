@@ -12,6 +12,8 @@ class Loot:
             self.sprite=pygame.image.load("images/health.png")
 
         self.rect = self.sprite.get_rect()
+        self.rect.x=self.position[0]
+        self.rect.y=self.position[1]
 
     def pickup(self,player,world):
 
@@ -20,6 +22,9 @@ class Loot:
             player.health+=20
             if player.health>player.max_health:
                 player.health=player.max_health
+
+
+        world.pickups.remove(self)
 
     def draw(self,screen):
         screen.blit(self.sprite, self.rect)
