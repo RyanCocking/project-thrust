@@ -9,7 +9,7 @@ class Enemy:
     def __init__(self,position,screen):
          self.position = position
          self.velocity = np.array([0,0])
-         self.speed_original = 0.5
+         self.speed_original = 0.8
          self.speed    = self.speed_original
          self.screen   = screen
          self.sprite   = pygame.image.load("images/enemy_init_1.png")
@@ -18,7 +18,7 @@ class Enemy:
          self.angle    = 0.0
          self.dead     = False
          self.health   = 25
-         self.firing_rate_original = 20
+         self.firing_rate_original = 10
          self.firing_rate = self.firing_rate_original
          self.draw_damage_text=False
          self.draw_timer = 0
@@ -110,11 +110,10 @@ class Enemy:
             self.position[1]=next_position[1]
             self.rect.y=self.position[1]
 
-
-        if self.teleport == False:
+        if self.teleport == False and self.charging >= 4:
             # Animation
             # Stationary
-            if (all(self.velocity== 0) and (current_frame%101 == 0)):
+            if (all(self.velocity== 0) and (current_frame%21 == 0)):
                 current_frame = frame_list[frame_count%2]
                 self.sprite = pygame.image.load("images/enemy_rest_" + self.orient + str(current_frame) + ".png")
 
@@ -125,10 +124,10 @@ class Enemy:
                 if (self.frame == 2):
                     self.frame = 0
 
-                if self.position[0]-self.prev_position[0] > 10:
+                if self.velocity[0] > 0 and frame_count%21 == 0:
                     self.sprite = pygame.image.load("images/enemy_walk_right_" + str(current_frame) + ".png")
                     self.orient = "right_"
-                elif self.position[0]-self.prev_position[0] < -10:
+                elif self.velocity[0] < 0 and frame_count%21 == 0:
                     self.sprite = pygame.image.load("images/enemy_walk_left_" + str(current_frame) + ".png")
                     self.orient = "left_"
 
@@ -145,22 +144,25 @@ class Enemy:
         # Shooting
         if frame_count%self.firing_rate==0:
 
-            current_frame = frame_list[self.frame]
+            current_frame_charge = frame_list[self.frame]
             self.frame += 1
             if (self.frame == 2):
                 self.frame = 0
 
             if self.charging < 4:
-                self.sprite = pygame.image.load("images/enemy_charge_"+self.orient + str(current_frame) + ".png")
+                self.speed = 0.
+                self.sprite = pygame.image.load("images/enemy_charge_"+self.orient + str(current_frame_charge) + ".png")
                 self.charging+=1
-                print (current_frame)
+                #print (current_frame_charge)
 
-            if self.charging >= 4:
+            elif self.charging >= 4:
+                self.speed = self.speed_original
                 bullet_position=copy.copy(self.position)
                 bullet_angle=copy.copy(self.angle)
                 new_bullet = Projectile(bullet_position,bullet_angle,self.screen,"laser")
                 world.projectiles.append(new_bullet)
                 self.charging = 0
+
 
         # Getting shot
         for projectile in world.projectiles:
