@@ -1,9 +1,10 @@
 import numpy as np
+import pygame
 
 # Player class
 class Player:
 
-    def __init__(self,position,screen,pygame):
+    def __init__(self,position,screen):
         self.position = position
         self.speed    = 0.5
         self.screen   = screen
@@ -40,8 +41,6 @@ class Player:
         self.damage_taken = 0
 
 
-
-
     def update(self,movement_input,pygame,pressed_up,pressed_down,pressed_left,pressed_right,mouse_position,frame_count,world):
 
         # initilisations
@@ -65,7 +64,7 @@ class Player:
 
         self.recoil=[0,0]
         for projectile in world.projectiles:
-            if projectile.rect.colliderect(self.mirror_rect):
+            if projectile.rect.colliderect(self.mirror_rect) and projectile.reflected!=True:
                 # Projectile hit mirror, reflect it
                 self.recoil[0]=projectile.velocity[0]*2
                 self.recoil[1]=projectile.velocity[1]*2
@@ -99,11 +98,10 @@ class Player:
 
              #Store previous position
              prev_position = self.position
-             next_position = self.position
 
              # Normalise movement vector
              normalised_movement = movement_input / np.linalg.norm(movement_input)
-             next_position=self.position+(normalised_movement*self.speed)
+             next_position+=(normalised_movement*self.speed)
 
         # If next position is valid, move
         if world.default_wall_rect.width<next_position[0]<self.adjusted_screen_dimensions[0]-world.default_wall_rect.width:
@@ -134,11 +132,8 @@ class Player:
             current_frame = frame_list[frame_count%2]
             self.sprite = pygame.image.load("images/player_rest_" + self.orient + str(current_frame) + ".png")
 
-
         # Walking animation
         else:
-
-
             current_frame = frame_list[self.frame]
 
             if (frame_count%51 == 0):
