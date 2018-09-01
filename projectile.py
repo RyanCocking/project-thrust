@@ -1,5 +1,6 @@
 import numpy as np
 import pygame
+from player import Player
 
 class Projectile:
 
@@ -16,6 +17,7 @@ class Projectile:
         self.acceleration = 0
         self.dead         = False
         self.reflected    = False
+        self.frame        = 0
 
         #if type == "rocket":
         #    self.acceleration = 0.01
@@ -26,7 +28,9 @@ class Projectile:
             self.damage       = 5
 
 
-    def update(self,world):
+    def update(self,world,frame_count,player):
+        # initilisations
+        frame_list = np.array((1,2))
 
         self.position += self.velocity
         self.rect.x = self.position[0]
@@ -37,6 +41,25 @@ class Projectile:
             self.dead=True
         elif not 0<self.position[1]<world.screen_height:
             self.dead=True
+
+        # animation
+        if (frame_count%7 == 0):
+
+            current_frame = frame_list[self.frame]
+            self.frame += 1
+            if (self.frame == 2):
+                self.frame = 0
+
+            self.sprite = pygame.transform.rotate(pygame.image.load("images/bullet_move_" + str(current_frame) + ".png"),270+self.angle*(-180.0/np.pi))
+
+            if self.reflected:
+
+                incidence_angle=(90.0-(player.mirror_angle)*(180.0/np.pi)-self.angle)
+                incidence_angle_rad=incidence_angle*(np.pi/180.0)
+
+                self.sprite   = pygame.transform.rotate(self.sprite,180-incidence_angle_rad+(self.angle*(np.pi/180.0)))
+
+
 
         # if np.count_nonzero(movement_input)>0:
         #     # Movement of player

@@ -16,12 +16,13 @@ class Enemy:
          self.angle    = 0.0
          self.dead     = False
          self.health   = 100
-         self.firing_rate = 90
+         self.firing_rate = 300
          self.draw_damage_text=False
          self.draw_timer = 0
          self.frame    = 0
          self.teleport = True
          self.tele_count = 1
+         self.charging  = 1
 
          self.font = pygame.font.Font('images/slkscre.ttf', 25)
 
@@ -85,8 +86,17 @@ class Enemy:
 
         # Shooting
         if frame_count%self.firing_rate==0:
-            new_bullet = Projectile(self.position,self.angle,self.screen,"laser")
-            world.projectiles.append(new_bullet)
+
+            if self.charging < 4:
+                self.sprite = pygame.image.load("images/enemy_charge_"+self.orient + str(current_frame) + ".png")
+                self.charging+=1
+                print (current_frame)
+
+
+            if self.charging >= 4:
+                new_bullet = Projectile(self.position,self.angle,self.screen,"laser")
+                world.projectiles.append(new_bullet)
+                self.charging = 0
 
         # Getting shot
         for projectile in world.projectiles:
@@ -109,7 +119,7 @@ class Enemy:
                 self.draw_timer=0
                 self.draw_damage_text=False
 
-    def draw(self):
+    def draw(self,frame_count):
         self.screen.blit(self.sprite, self.rect)
 
         if(self.draw_damage_text):
@@ -121,7 +131,7 @@ class Enemy:
         if(self.teleport):
             self.firing_rate = 1e9
             self.speed       = 0.
-            if (frame_count%5 == 0):
+            if (frame_count%7 == 0):
                     self.sprite = pygame.image.load("images/enemy_init_" + str(self.tele_count) + ".png")
                     self.tele_count += 1
 
