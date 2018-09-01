@@ -34,7 +34,7 @@ class Player:
         self.adjusted_screen_dimensions[0] = self.screen_dimensions[0]-self.rect.width
         self.adjusted_screen_dimensions[1] = self.screen_dimensions[1]-self.rect.height
 
-        self.font = pygame.font.Font('images/slkscre.ttf', 20)
+        self.font = pygame.font.Font('images/slkscre.ttf', 25)
         self.draw_damage_text=False
         self.draw_timer = 0
         self.damage_taken = 0
@@ -63,33 +63,12 @@ class Player:
         prev_position = self.position
         next_position = self.position
 
-        # Movement of player
-        if np.count_nonzero(movement_input)>0:
-            # See if next position is valid
-
-             #Store previous position
-             prev_position = self.position
-             next_position = self.position
-
-             # Normalise movement vector
-             normalised_movement = movement_input / np.linalg.norm(movement_input)
-             next_position=self.position+(normalised_movement*self.speed)
-
-             # If next position is valid, move
-             if 0<next_position[0]<self.adjusted_screen_dimensions[0]:
-                 self.position[0]=next_position[0]
-                 self.rect.x=self.position[0]
-
-             if 0<next_position[1]<self.adjusted_screen_dimensions[1]:
-                 self.position[1]=next_position[1]
-                 self.rect.y=self.position[1]
-
-        self.mirror_rect.x=self.position[0]+self.mirror_offset[0]
-        self.mirror_rect.y=self.position[1]+self.mirror_offset[1]
-
+        self.recoil=[0,0]
         for projectile in world.projectiles:
             if projectile.rect.colliderect(self.mirror_rect):
                 # Projectile hit mirror, reflect it
+                self.recoil[0]=projectile.velocity[0]*2
+                self.recoil[1]=projectile.velocity[1]*2
 
                 incidence_angle=(90.0-(self.mirror_angle)*(180.0/np.pi)-projectile.angle)
                 incidence_angle_rad=incidence_angle*(np.pi/180.0)
@@ -109,16 +88,41 @@ class Player:
                 self.damage_taken=int(total_damage)
                 self.draw_damage_text=True
                 projectile.dead=True
+                self.recoil[0]=projectile.velocity[0]*3
+                self.recoil[1]=projectile.velocity[1]*3
                 world.projectiles.remove(projectile)
 
-                
+        # Movement of player
+        next_position=self.position+self.recoil
+        if np.count_nonzero(movement_input)>0:
+            # See if next position is valid
+
+             #Store previous position
+             prev_position = self.position
+             next_position = self.position
+
+             # Normalise movement vector
+             normalised_movement = movement_input / np.linalg.norm(movement_input)
+             next_position=self.position+(normalised_movement*self.speed)
+
+        # If next position is valid, move
+        if 0<next_position[0]<self.adjusted_screen_dimensions[0]:
+            self.position[0]=next_position[0]
+            self.rect.x=self.position[0]
+
+        if 0<next_position[1]<self.adjusted_screen_dimensions[1]:
+            self.position[1]=next_position[1]
+            self.rect.y=self.position[1]
+
+        self.mirror_rect.x=self.position[0]+self.mirror_offset[0]
+        self.mirror_rect.y=self.position[1]+self.mirror_offset[1]
 
         if self.health<1:
             self.dead=True
 
         if self.draw_damage_text:
             self.draw_timer+=100
-            if self.draw_timer>2000:
+            if self.draw_timer>3000:
                 self.draw_timer=0
                 self.draw_damage_text=False
         # ANIMATION

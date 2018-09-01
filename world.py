@@ -4,15 +4,19 @@ import numpy as np
 
 class World:
 
-    def __init__(self):
+    def __init__(self,screen_width,screen_height):
         self.score=0
         self.kills=0
 
         self.enemies = []
         self.projectiles = []
 
-        self.screen_width  = 500
-        self.screen_height = 400
+        self.screen_width  = screen_width
+        self.screen_height = screen_height
+
+        self.font = pygame.font.Font('images/slkscrb.ttf', 30)
+        self.wave_text_position=[2*self.screen_width/3.0,0]
+        self.score_text_position=[2*self.screen_width/3.0,20]
 
         self.floor_sprites=[]
         for i in xrange(1,7):
@@ -47,7 +51,7 @@ class World:
            rect.y=position[1]
            self.heart_rects.append(rect)
 
-    def draw(self,screen,player):
+    def draw(self,screen,player,waves):
 
         for floor_tile in self.floor_tiles:
             screen.blit(floor_tile[0][0], floor_tile[1])
@@ -59,3 +63,10 @@ class World:
             else:
                 screen.blit(self.empty_heart_sprite, heart_rect)
             counter+=1
+
+
+        self.wavetextsurface = self.font.render('Wave: '+str(waves.wave_number), False, (0, 0, 0))
+        screen.blit(self.wavetextsurface,self.wave_text_position)
+
+        self.scoretextsurface = self.font.render('Score: '+str(self.score), False, (0, 0, 0))
+        screen.blit(self.scoretextsurface,self.score_text_position)
