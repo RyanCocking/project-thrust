@@ -1,3 +1,3 @@
 # project-thrust
 
-Tilesize 24x24
+Ewan, Rob, Ryan and Ted
